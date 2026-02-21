@@ -403,7 +403,7 @@ dav_init_webdav(const dav_args *args)
         username = ne_strdup(args->username);
     if (args->password)
         password = ne_strdup(args->password);
-    ne_add_server_auth(session, NE_AUTH_ALL, auth, "server");
+    ne_add_server_auth(session, NE_AUTH_ALL|NE_AUTH_LEGACY_DIGEST, auth, "server");
 
     if (args->useproxy && args->p_host) {
         ne_session_proxy(session, args->p_host, args->p_port);
@@ -411,7 +411,7 @@ dav_init_webdav(const dav_args *args)
             p_username = ne_strdup(args->p_user);
         if (args->p_passwd)
             p_password = ne_strdup(args->p_passwd);
-        ne_add_proxy_auth(session, NE_AUTH_ALL, auth, "proxy");
+        ne_add_proxy_auth(session, NE_AUTH_ALL|NE_AUTH_LEGACY_DIGEST, auth, "proxy");
     }
 
 
@@ -1332,13 +1332,13 @@ create_rd_session(const ne_uri *uri)
     ne_set_useragent(session, useragent);
     free(useragent);
 
-    ne_add_server_auth(rd_sess, NE_AUTH_ALL, auth, "server");
+    ne_add_server_auth(rd_sess, NE_AUTH_ALL|NE_AUTH_LEGACY_DIGEST, auth, "server");
 
     ne_uri *proxy = (ne_uri *) ne_calloc(sizeof(ne_uri));
     ne_fill_proxy_uri(rd_sess, proxy);
     if (proxy->host) {
         ne_session_proxy(rd_sess, proxy->host, proxy->port);
-        ne_add_proxy_auth(rd_sess, NE_AUTH_ALL, auth, "proxy");
+        ne_add_proxy_auth(rd_sess, NE_AUTH_ALL|NE_AUTH_LEGACY_DIGEST, auth, "proxy");
     }
 
     if (strcmp(uri->scheme, "https") == 0) {
